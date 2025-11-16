@@ -43,10 +43,6 @@ public class ExchangeRatesServlet extends HttpServlet {
             throw new IllegalArgumentException("Base code matches target code");
         }
 
-        System.out.println("baseCurrencyCode: " + baseCurrencyCode);
-        System.out.println("targetCurrencyCode: " + targetCurrencyCode);
-        System.out.println("rate: " + rate);
-
         Optional<Currency> baseCurrency = currencyDao.get(baseCurrencyCode);
         Optional<Currency> targetCurrency = currencyDao.get(targetCurrencyCode);
 
