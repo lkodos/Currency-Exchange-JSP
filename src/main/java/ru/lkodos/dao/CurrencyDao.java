@@ -70,6 +70,11 @@ public class CurrencyDao implements Dao<String, Currency> {
         }
     }
 
+    @Override
+    public void update(Currency entity) {
+
+    }
+
     public static CurrencyDao getInstance(){
         return INSTANCE;
     }

@@ -105,6 +105,11 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
     }
 
     @Override
+    public void update(FullExchangeRate entity) {
+
+    }
+
+    @Override
     public FullExchangeRate save(FullExchangeRate entity) {
         return null;
     }
