@@ -22,7 +22,6 @@ public class GetTargetCurrencyValidatorFilter implements Filter {
         } catch (Exception e) {
             throw new IllegalArgumentException("Invalid specific currency code");
         }
-        System.out.println("GetTargetCurrencyServlet code: " + code);
         if ((code.length() != 3) || !(requestValidator.isLetter(code))) {
             throw new IllegalArgumentException("Invalid specific currency code");
         }
