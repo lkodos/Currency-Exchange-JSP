@@ -8,4 +8,6 @@ public interface Dao<K, T> {
     List<T> getAll();
 
     Optional<T> get(K key);
+
+    T save(T entity);
 }

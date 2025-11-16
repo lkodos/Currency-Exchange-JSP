@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.lkodos.exception.CurrencyAlreadyExistsException;
 import ru.lkodos.exception.CurrencyNotFoundException;
 import ru.lkodos.exception.DbAccessException;
 
@@ -25,6 +26,9 @@ public class ErrorHandlerFilter implements Filter {
         }
         catch (CurrencyNotFoundException e) {
             handleError(servletRequest, servletResponse, HttpServletResponse.SC_NOT_FOUND, e);
+        }
+        catch (CurrencyAlreadyExistsException e) {
+            handleError(servletRequest, servletResponse, HttpServletResponse.SC_CONFLICT, e);
         }
 
     }

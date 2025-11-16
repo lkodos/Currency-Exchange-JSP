@@ -25,4 +25,22 @@ public class CurrencyServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
         ResponceSender.send(resp, currencyDtoList);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String name = (String) req.getAttribute("name");
+        String code = (String) req.getAttribute("code");
+        String sign = (String) req.getAttribute("sign");
+
+        Currency currency = Currency.builder()
+                .code(code)
+                .fullName(name)
+                .sign(sign)
+                .build();
+
+        Currency savedCurrency = currencyDao.save(currency);
+        CurrencyDto currencyDto = MapperUtil.map(savedCurrency, CurrencyDto.class);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+        ResponceSender.send(resp, currencyDto);
+    }
 }
