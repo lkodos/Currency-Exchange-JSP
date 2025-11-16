@@ -37,7 +37,7 @@ public class ConnectionManager {
             }
             return dataSource.getConnection();
         } catch (Exception e) {
-            throw new DbAccessException("Database connection failed", e);
+            throw new DbAccessException("Database connection failed!", e);
         }
     }
 }
