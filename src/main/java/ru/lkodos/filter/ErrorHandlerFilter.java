@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.lkodos.exception.CurrencyNotFoundException;
 import ru.lkodos.exception.DbAccessException;
 
 import java.io.IOException;
@@ -18,6 +19,12 @@ public class ErrorHandlerFilter implements Filter {
         }
         catch (DbAccessException e) {
             handleError(servletRequest, servletResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e);
+        }
+        catch (IllegalArgumentException e) {
+            handleError(servletRequest, servletResponse, HttpServletResponse.SC_BAD_REQUEST, e);
+        }
+        catch (CurrencyNotFoundException e) {
+            handleError(servletRequest, servletResponse, HttpServletResponse.SC_NOT_FOUND, e);
         }
 
     }

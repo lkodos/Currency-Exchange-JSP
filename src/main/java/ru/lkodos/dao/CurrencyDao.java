@@ -7,14 +7,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CurrencyDao implements Dao<String, Currency> {
 
     private static final   CurrencyDao INSTANCE = new CurrencyDao();
 
     private static final String GET_ALL_SQL = "SELECT id, code, full_name, sign FROM currency";
+    private static final String GET_BY_CODE_SQL = "SELECT id, code, full_name, sign FROM currency WHERE code = ?";
 
     private CurrencyDao() {
+    }
+
+    @Override
+    public Optional<Currency> get(String code) {
+        try (var connection = ConnectionManager.getConnection();
+             var ps = connection.prepareStatement(GET_BY_CODE_SQL)) {
+
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return Optional.of(buildCurrency(rs));
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
