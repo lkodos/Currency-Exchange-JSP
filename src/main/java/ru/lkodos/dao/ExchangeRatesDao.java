@@ -1,7 +1,9 @@
 package ru.lkodos.dao;
 
 import ru.lkodos.db_util.ConnectionManager;
+import ru.lkodos.entity.ExchangeRate;
 import ru.lkodos.entity.FullExchangeRate;
+import ru.lkodos.exception.CurrencyAlreadyExistsException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,6 +46,7 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
                         JOIN currency c2 ON c2.id = e.target_currency_id
                         WHERE base_code = ? AND target_code = ?
                         """;
+    private static final String SAVE_NEW_EXCHANGE_RATE_SQL = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate) VALUES (?, ?, ?)";
 
     private ExchangeRatesDao() {
     }
@@ -83,6 +86,22 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
     @Override
     public Optional<FullExchangeRate> get(String key) {
         return Optional.empty();
+    }
+
+    public ExchangeRate save(ExchangeRate entity) {
+        try (var connection = ConnectionManager.getConnection();
+             var ps = connection.prepareStatement(SAVE_NEW_EXCHANGE_RATE_SQL)) {
+
+            ps.setInt(1, entity.getBaseCurrencyId());
+            ps.setInt(2, entity.getTargetCurrencyId());
+            ps.setBigDecimal(3, entity.getRate());
+            ps.executeUpdate();
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            entity.setId(generatedKeys.getInt(1));
+            return entity;
+        } catch (SQLException e) {
+            throw new CurrencyAlreadyExistsException("Exchange Rate already exists!", e);
+        }
     }
 
     @Override
