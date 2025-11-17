@@ -5,6 +5,7 @@ import ru.lkodos.entity.ExchangeRate;
 import ru.lkodos.entity.FullExchangeRate;
 import ru.lkodos.exception.CurrencyAlreadyExistsException;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
                         WHERE base_code = ? AND target_code = ?
                         """;
     private static final String SAVE_NEW_EXCHANGE_RATE_SQL = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate) VALUES (?, ?, ?)";
+    private static final String UPDATE_EXCHANGE_RATE_SQL = "UPDATE exchange_rates SET rate = ? WHERE base_currency_id = ? AND target_currency_id = ?";
 
     private ExchangeRatesDao() {
     }
@@ -102,6 +104,20 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
         } catch (SQLException e) {
             throw new CurrencyAlreadyExistsException("Exchange Rate already exists!", e);
         }
+    }
+
+    public void update(BigDecimal rate, Integer baseCurrencyId, Integer targetCurrencyId) {
+        try (var connection = ConnectionManager.getConnection();
+             var ps = connection.prepareStatement(SAVE_NEW_EXCHANGE_RATE_SQL)) {
+
+            ps.setBigDecimal(1, rate);
+            ps.setInt(2, baseCurrencyId);
+            ps.setInt(3, targetCurrencyId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new CurrencyAlreadyExistsException("Some SQL exception!", e);
+        }
+
     }
 
     @Override

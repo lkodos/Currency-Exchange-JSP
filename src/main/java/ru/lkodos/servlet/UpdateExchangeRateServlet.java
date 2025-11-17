@@ -18,29 +18,14 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-@WebServlet(urlPatterns = {"/exchangeRate/*"}, name = "GetTargetExchangeRatesServlet")
-public class GetTargetExchangeRatesServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/exchangeRateq/*"}, name = "UpdateExchangeRateServlet")
+public class UpdateExchangeRateServlet extends HttpServlet {
 
     private static final ExchangeRatesDao exchangeRateDao = ExchangeRatesDao.getInstance();
     private static final CurrencyDao currencyDao = CurrencyDao.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String baseCurrencyCode = (String) req.getAttribute("baseCurrencyCode");
-        String targetCurrencyCode = (String) req.getAttribute("targetCurrencyCode");
-
-        Optional<FullExchangeRate> exchangeRate = exchangeRateDao.getFullExchangeRateByCode(baseCurrencyCode, targetCurrencyCode);
-        if (exchangeRate.isPresent()) {
-            resp.setStatus(HttpServletResponse.SC_OK);
-            ExchangeRateDto exchangeRateDto = MapperUtil.map(exchangeRate.get(), ExchangeRateDto.class);
-            ResponceSender.send(resp, exchangeRateDto);
-        } else {
-            throw new CurrencyNotFoundException("Exchange rate not found for the pair");
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String baseCurrencyCode = (String) req.getAttribute("baseCurrencyCode");
         String targetCurrencyCode = (String) req.getAttribute("targetCurrencyCode");
         String rate = (String) req.getAttribute("rate");
