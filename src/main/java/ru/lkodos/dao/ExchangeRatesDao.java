@@ -108,7 +108,7 @@ public class ExchangeRatesDao implements Dao<String, FullExchangeRate> {
 
     public void update(BigDecimal rate, Integer baseCurrencyId, Integer targetCurrencyId) {
         try (var connection = ConnectionManager.getConnection();
-             var ps = connection.prepareStatement(SAVE_NEW_EXCHANGE_RATE_SQL)) {
+             var ps = connection.prepareStatement(UPDATE_EXCHANGE_RATE_SQL)) {
 
             ps.setBigDecimal(1, rate);
             ps.setInt(2, baseCurrencyId);

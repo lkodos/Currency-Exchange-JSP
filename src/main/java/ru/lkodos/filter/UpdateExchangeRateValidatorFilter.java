@@ -14,26 +14,27 @@ public class UpdateExchangeRateValidatorFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        if ("POST".equalsIgnoreCase((request).getMethod())) {
-            String baseCurrencyCode;
-            String targetCurrencyCode;
+        if ("PATCH".equalsIgnoreCase((request).getMethod())) {
             String rate;
+            String fullCode;
             try {
-                baseCurrencyCode = request.getParameter("baseCurrencyCode");
-                targetCurrencyCode = request.getParameter("targetCurrencyCode");
+                fullCode = request.getPathInfo().substring(1).toUpperCase();
                 rate = request.getParameter("rate");
             } catch (Exception e) {
                 throw new IllegalArgumentException("Required form field is missing");
             }
 
-            if (baseCurrencyCode == null || targetCurrencyCode == null || rate == null || baseCurrencyCode.isEmpty() || targetCurrencyCode.isEmpty() || rate.isEmpty()) {
+            if (rate == null || rate.isEmpty()) {
                 throw new IllegalArgumentException("Required form field is missing");
             }
 
-            if (baseCurrencyCode.length() != 3 || !(requestValidator.isLetter(baseCurrencyCode)) || targetCurrencyCode.length() != 3 || !(requestValidator.isLetter(targetCurrencyCode))) {
+            if (fullCode.length() != 6 || !(requestValidator.isLetter(fullCode))) {
                 throw new IllegalArgumentException("Invalid currency code. Currency code must consist of three Latin letters!");
             }
+            String baseCurrencyCode = fullCode.substring(0, 3);
+            String targetCurrencyCode = fullCode.substring(3);
             request.setAttribute("baseCurrencyCode", baseCurrencyCode);
             request.setAttribute("targetCurrencyCode", targetCurrencyCode);
             request.setAttribute("rate", rate);

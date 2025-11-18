@@ -7,7 +7,7 @@ import ru.lkodos.servlet_util.RequestValidator;
 
 import java.io.IOException;
 
-@WebFilter(servletNames = {"ExchangeRatesServlet", "GetTargetExchangeRatesServlet"})
+@WebFilter(servletNames = {"ExchangeRatesServlet"})
 public class NewExchangeRateValidatorFilter implements Filter {
 
     private static final RequestValidator requestValidator = RequestValidator.getInstance();

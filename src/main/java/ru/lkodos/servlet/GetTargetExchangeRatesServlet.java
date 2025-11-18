@@ -25,6 +25,15 @@ public class GetTargetExchangeRatesServlet extends HttpServlet {
     private static final CurrencyDao currencyDao = CurrencyDao.getInstance();
 
     @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        if ("PATCH".equalsIgnoreCase(req.getMethod())) {
+            doPatch(req, resp);
+        } else {
+            super.service(req, resp);
+        }
+    }
+
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String baseCurrencyCode = (String) req.getAttribute("baseCurrencyCode");
         String targetCurrencyCode = (String) req.getAttribute("targetCurrencyCode");
@@ -40,7 +49,7 @@ public class GetTargetExchangeRatesServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPatch(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String baseCurrencyCode = (String) req.getAttribute("baseCurrencyCode");
         String targetCurrencyCode = (String) req.getAttribute("targetCurrencyCode");
         String rate = (String) req.getAttribute("rate");
