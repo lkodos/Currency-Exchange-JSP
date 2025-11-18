@@ -10,4 +10,6 @@ public interface Dao<K, T> {
     Optional<T> get(K key);
 
     T save(T entity);
+
+    void update(T entity);
 }
